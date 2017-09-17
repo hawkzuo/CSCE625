@@ -16,7 +16,11 @@ public class TestBuilder {
     public static void main(String[] args) {
         PriorityQueue<Node> pq = new PriorityQueue<>();
 
-        Node root = new Node(10, 5, false);
+//        Node root = new Node(10, 5, false);
+        int[][] values = {{2,3,5},{6,9},{1,4,7,8,10}};
+        Node root = new Node(10 , 3, values);
+//        int[][] values = {{},{2,4},{1,3,5}};
+//        Node root = new Node(5 , 3, values);
         Node optimal = null;
         pq.add(root);
 
@@ -36,13 +40,14 @@ public class TestBuilder {
             List<Node> nextLevel = nextNode.generateSuccessors();
             boolean found = false;
             for(Node next: nextLevel) {
-                if(visitedStates.contains(next.state)) {
-                    continue;
-                } else if (Utils.checkState(next.state)) {
-                    optimal = next;
-                    found = true;
-                } else {
-                    pq.add(next);
+                if (!visitedStates.contains(next.state)) {
+                    if (Utils.checkState(next.state)) {
+                        optimal = next;
+                        found = true;
+                        break;
+                    } else {
+                        pq.add(next);
+                    }
                 }
             }
             if(found) {
@@ -58,10 +63,11 @@ public class TestBuilder {
         System.out.println("End time: " + endTime + ".\n");
         System.out.println("Whole running time (ms):" + (endTime-startTime) + ".\n");
 
-        System.out.println(optimal.rank);
+
         System.out.println(Utils.generatePath(optimal));
         System.out.println("Max Queue:" + maxQueueSize + ".\n");
         System.out.println("Max Set:" + maxStatesStored + ".\n");
+        System.out.println(optimal.rank);
     }
 
     // Brute-force for 3 case:

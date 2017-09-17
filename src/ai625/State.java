@@ -72,31 +72,73 @@ public class State {
         if(isRandom) {
             Random r = new Random(47);
 
-            for(int b=blocks; b>=1; b--) {
+            // 1st: generate a random sequence of numbers between [1,blocks]
+           List<Integer> elements = generateRandom(blocks);
+            // Don't generate random sequence
+//            List<Integer> elements = new ArrayList<>();
+//            for(int j=1; j<=blocks; j++) {
+//                elements.add(j);
+//            }
+            for(Integer element: elements) {
                 int stackNum = 1+r.nextInt(stacks);
-                board.get(stackNum).add(b);
+                board.get(stackNum).add(element);
+            }
+        } else {
+            if(stacks == 3) {
+                // Base test case
+                board.get(1).add(4);
+                board.get(2).add(3);    board.get(2).add(1);
+                board.get(3).add(2);    board.get(3).add(5);
+            }
+
+            if(stacks == 5) {
+
+                board.get(1).add(4);
+                board.get(2).add(5);    board.get(2).add(6);    board.get(2).add(9); board.get(2).add(10);
+                board.get(3).add(2);    board.get(3).add(7);
+                board.get(4).add(3);    board.get(4).add(8);
+                board.get(5).add(1);
             }
         }
+    }
 
-        if(stacks == 3) {
-            // Base test case
-            board.get(1).add(4);
-            board.get(2).add(3);    board.get(2).add(1);
-            board.get(3).add(2);    board.get(3).add(5);
+    // Initialize from int[][]
+    public State(int blocks, int stacks, int[][] inputs) {
+        block = blocks;
+        stack = stacks;
+        board = new ArrayList<>();
+        for(int i=0;i<=stack; i++) {
+            board.add(new LinkedList<>());
         }
 
-        if(stacks == 5) {
-            board.get(1).add(4);
-            board.get(2).add(5);    board.get(2).add(6);    board.get(2).add(9); board.get(2).add(10);
-            board.get(3).add(2);    board.get(3).add(7);
-            board.get(4).add(3);    board.get(4).add(8);
-            board.get(5).add(1);
+        int cursor = 1;
+        for(int[] values: inputs) {
+            for(int val: values) {
+                board.get(cursor).add(val);
+            }
+            cursor++;
         }
-
-
     }
 
 
+
+
+    private List<Integer> generateRandom(int upperBound) {
+        List<Integer> res = new ArrayList<>();
+        for(int i=1; i<=upperBound; i++) {
+            res.add(i);
+        }
+
+        List<Integer> output = new ArrayList<>();
+        // Randomly pop out
+        Random r = new Random();
+        for(int up=upperBound; up>=1; up--) {
+            int removeIndex = r.nextInt(up);
+            Integer removed = res.remove(removeIndex);
+            output.add(removed);
+        }
+        return output;
+    }
 
 
 }

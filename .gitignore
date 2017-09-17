@@ -1,6 +1,6 @@
 # ignore IDEA files
 .idea/
-.iml
+*.iml
 
 # ignore production outputs
 out/
