@@ -17,7 +17,7 @@ public class TestBuilder {
         PriorityQueue<Node> pq = new PriorityQueue<>();
 
 //        Node root = new Node(10, 5, false);
-        int[][] values = {{2,3,5},{6,9},{1,4,7,8,10}};
+        int[][] values = {{10},{1,3,4,5,8},{2,6,7,9}};
         Node root = new Node(10 , 3, values);
 //        int[][] values = {{},{2,4},{1,3,5}};
 //        Node root = new Node(5 , 3, values);
