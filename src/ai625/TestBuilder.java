@@ -1,6 +1,5 @@
 package ai625;
 
-import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -16,8 +15,14 @@ public class TestBuilder {
     public static void main(String[] args) {
         PriorityQueue<Node> pq = new PriorityQueue<>();
 
+//#EG
+//#ACDJ
+//#BFHI
+
+
+
 //        Node root = new Node(10, 5, false);
-        int[][] values = {{10},{1,3,4,5,8},{2,6,7,9}};
+        int[][] values = {{5,7},{1,3,4,10},{2,6,8,9}};
         Node root = new Node(10 , 3, values);
 //        int[][] values = {{},{2,4},{1,3,5}};
 //        Node root = new Node(5 , 3, values);

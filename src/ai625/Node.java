@@ -36,7 +36,7 @@ public class Node implements Comparable<Node> {
         action = null;
         pathCost = 0;
         rank = 0;
-        hIndex = generateHIndex4();
+        hIndex = generateHIndex5();
     }
 
     // Initialize arbitrary node
@@ -48,7 +48,7 @@ public class Node implements Comparable<Node> {
         action = null;
         pathCost = 0;
         rank = 0;
-        hIndex = generateHIndex4();
+        hIndex = generateHIndex5();
     }
 
 
@@ -59,8 +59,118 @@ public class Node implements Comparable<Node> {
         this.action = action;
         this.pathCost = pathCost;
         this.rank = rank;
-        this.hIndex = generateHIndex4();
+        this.hIndex = generateHIndex5();
     }
+
+
+
+    private int calIndex5For1stStack(int index, List<Integer> stack, int blocks) {
+        int blockNum = stack.get(index);
+        Integer bottom=null, upper = null;
+        int result = 0;
+        if(index > 0) {
+            bottom = stack.get(index-1);
+        }
+        if(index + 1 < stack.size()) {
+            upper = stack.get(index + 1);
+        }
+
+        if(blockNum == 1) {
+            if(bottom != null) {
+                result ++;
+            }
+            if(upper == null || upper != blockNum+1) {
+                result ++;
+            }
+        } else if(blockNum == blocks) {
+            if(upper != null) {
+                result ++;
+            }
+            if(bottom == null || bottom != blockNum-1) {
+                result ++;
+            }
+        } else {
+            if(bottom == null || bottom != blockNum-1) {
+                result ++;
+            }
+            if(upper == null || upper != blockNum+1) {
+                result ++;
+            }
+        }
+        return result;
+
+    }
+
+    private int generateHIndex5() {
+//        calculates the difference between the current state and the goal state,
+//        but looks at the details of each block.
+//        If Block A in the goal state is supposed to be on top of Block B and under Block C
+//        and in the current state it is neither on top of B or under C, then we add 2 to the heuristic.
+        // 12345
+        // 1
+        // 5432
+        // 2345
+
+
+        // 2345
+        // 1
+
+        // 1345
+        // 2
+
+        // 1543
+        // 2            {1-345 is better than 1-543}
+
+
+        // 1
+        // 2
+        // 345
+
+        // 1
+        // 2
+        // 543  534
+
+        //{543 is better than 345 ==? 534}  531
+        int disOrder = 0;
+        List<Integer> firstStack = state.board.get(1);
+        for(int i=0; i<firstStack.size(); i++) {
+            if(firstStack.get(i) != i+1) {
+                disOrder += 2;
+            }
+        }
+
+        for(int j=2; j<=state.stack; j++) {
+            List<Integer> toCheck = state.board.get(j);
+            Map<Integer, Integer> disOrders = new HashMap<>();
+            // New line
+            disOrder += toCheck.size();
+
+            for (Integer stepNumber : toCheck) {
+                disOrders.put(stepNumber, 0);
+                for (Map.Entry<Integer, Integer> entry : disOrders.entrySet()) {
+                    if (entry.getKey() < stepNumber) {
+                        entry.setValue(entry.getValue() + 1);
+                    }
+                }
+            }
+
+            int disOrderForStack = 0;
+
+            for(Map.Entry<Integer, Integer> entry: disOrders.entrySet()) {
+                disOrderForStack = Math.max(disOrderForStack, entry.getValue());
+            }
+            disOrder += disOrderForStack;
+        }
+
+
+
+        return disOrder + rank;
+    }
+
+
+
+
+
 
     // New Idea: Calculate all the blocks and the count of blocks greater than it
     private int generateHIndex4() {
@@ -75,7 +185,7 @@ public class Node implements Comparable<Node> {
                 hIndex -= 1;
                 nextIntToMove = i+1+1;
             } else {
-                hIndex += 1/state.stack;
+                hIndex += 2/state.stack;
                 break;
             }
         }
@@ -227,5 +337,10 @@ public class Node implements Comparable<Node> {
     @Override
     public int compareTo(Node o) {
         return Integer.compare(hIndex, o.hIndex);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Node && this.state.equals(((Node) obj).state);
     }
 }
