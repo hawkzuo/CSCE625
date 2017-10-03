@@ -1,13 +1,24 @@
 package ai625;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Amos on 2017/9/15.
  */
 public class Utils {
+
+    private static Map<Character,Integer> mapping = new HashMap<>();
+    private static Map<Integer,Character> reversedMapping = new HashMap<>();
+    static {
+        char ch = 'A'; int counter = 1;
+        while(ch <= 'Z') {
+            mapping.put(ch, counter);
+            reversedMapping.put(counter, ch);
+            ch++;
+            counter++;
+        }
+    }
+
     public static boolean checkState(State state) {
         List<Integer> firstStack = state.board.get(1);
         int targetBlocks = state.block;
@@ -43,6 +54,10 @@ public class Utils {
         return sb.toString();
     }
 
-
-
+    public static int n(char ch) {
+        return mapping.get(ch);
+    }
+    public static char c(int i) {
+        return reversedMapping.get(i);
+    }
 }

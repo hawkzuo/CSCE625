@@ -1,9 +1,6 @@
 package ai625;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.*;
 
 /*
  * Created by Amos on 9/15/17.
@@ -19,15 +16,41 @@ public class TestBuilder {
 //#ACDJ
 //#BFHI
 
-
-
 //        Node root = new Node(10, 5, false);
-        int[][] values = {{5,7},{1,3,4,10},{2,6,8,9}};
-        Node root = new Node(10 , 3, values);
+
+//        int[][] values = {{4,6,10},{2,7,8,9},{1,3,5}};
+//        Node root = new Node(10 , 3, values);
+
 //        int[][] values = {{},{2,4},{1,3,5}};
 //        Node root = new Node(5 , 3, values);
+
+//#DN
+//#AEFGHIJKO
+//#BCLM
+//        Map<Character,Integer> mapping = new HashMap<>();
+//        char ch = 'A'; int counter = 1;
+//        while(ch <= 'Z') {
+//            mapping.put(ch, counter);
+//            ch++;
+//            counter++;
+//        }
+//        int[][] values = {{mapping.get('F'),mapping.get('D'),mapping.get('A'),mapping.get('G')},
+//                {mapping.get('O'),mapping.get('M'),mapping.get('B'),mapping.get('G'),
+//                        mapping.get('C')},
+//                {mapping.get('H'),mapping.get('N'),mapping.get('L'),mapping.get('E'),mapping.get('K'),mapping.get('I')}};
+
+        int[][] values = {{},
+                {Utils.n('B'), Utils.n('E'), Utils.n('K'),Utils.n('A'),Utils.n('F')},
+                {Utils.n('J'),Utils.n('I'),Utils.n('L'),Utils.n('C')},
+                {Utils.n('D'),Utils.n('H'),Utils.n('G')},
+                {}};
+
+        Node root = new Node(12 , 5, values);
+
         Node optimal = null;
         pq.add(root);
+
+        int maxRank = 0;
 
         Integer maxQueueSize = 0;
         Integer maxStatesStored = 0;
@@ -36,22 +59,34 @@ public class TestBuilder {
         System.out.println("Start time: " + startTime + ".\n");
 
         // Don't allow duplicate states
-        Set<State> visitedStates = new HashSet<>();
+        Set<String> visitedStates = new HashSet<>();
+        visitedStates.add(root.state.toString());
+
 
         while(!pq.isEmpty()) {
+            if(maxQueueSize + 10000 < pq.size() ) {
+                maxQueueSize = pq.size();
+                System.out.println("Current Q size: " +maxQueueSize + "\n");
+            }
+
             Node nextNode = pq.poll();
-            visitedStates.add(nextNode.state);
+            if(nextNode.rank > maxRank) {
+                maxRank = nextNode.rank;
+                System.out.println("Max rank refreshed:"+maxRank+"\n");
+            }
+//            visitedStates.add(nextNode.state.toString());
 
             List<Node> nextLevel = nextNode.generateSuccessors();
             boolean found = false;
             for(Node next: nextLevel) {
-                if (!visitedStates.contains(next.state)) {
+                if (!visitedStates.contains(next.state.toString())) {
                     if (Utils.checkState(next.state)) {
                         optimal = next;
                         found = true;
                         break;
                     } else {
                         pq.add(next);
+                        visitedStates.add(next.state.toString());
                     }
                 }
             }
@@ -59,10 +94,9 @@ public class TestBuilder {
                 break;
             }
 
-            maxQueueSize = pq.size();
             maxStatesStored = visitedStates.size();
         }
-
+        maxQueueSize = Math.max(maxQueueSize, pq.size());
 
         long endTime = System.currentTimeMillis();
         System.out.println("End time: " + endTime + ".\n");
@@ -88,4 +122,10 @@ public class TestBuilder {
 //
 //    Max Set:4574.
 
+
+//    Max Queue:2319.
+//
+//    Max Set:2534.
+//
+//            19
 }
